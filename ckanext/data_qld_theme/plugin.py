@@ -36,6 +36,10 @@ def get_comment_notification_recipients_enabled():
     return config.get('ckan.comments.follow_mute_enabled', False)
 
 
+def is_reporting_enabled():
+    return 'data_qld_reporting' in config.get('ckan.plugins', '')
+
+
 def is_request_for_resource():
     """
     Searching for a url path for /dataset/ and /resource/
@@ -106,6 +110,22 @@ def populate_revision(resource):
         resource['revision_timestamp'] = current_revision.revision_timestamp
 
 
+def unreplied_comments_x_days(thread_url):
+    """A helper function for Data.Qld Engagement Reporting to highlight un-replied comments
+    after x number of days (number of days is a constant in the reporting plugin).
+    """
+    comment_ids = []
+
+    if 'data_qld_reporting' in config.get('ckan.plugins', False):
+        unreplied_comments = toolkit.get_action('comments_no_replies_after_x_days')({}, {
+            'thread_url': thread_url
+        })
+
+        comment_ids = [comment[1] for comment in unreplied_comments]
+
+    return comment_ids
+
+
 class DataQldThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.ITemplateHelpers)
@@ -129,5 +149,7 @@ class DataQldThemePlugin(plugins.SingletonPlugin):
             'set_external_resources': set_external_resources,
             'is_prod': is_prod,
             'comment_notification_recipients_enabled': get_comment_notification_recipients_enabled,
-            'populate_revision': populate_revision
+            'populate_revision': populate_revision,
+            'unreplied_comments_x_days': unreplied_comments_x_days,
+            'is_reporting_enabled': is_reporting_enabled
         }
