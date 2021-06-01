@@ -3,12 +3,12 @@
 {% block page_primary_action %}
   {% if h.check_access('create_datarequest') %}
     <div class="page_primary_action">
-      {% link_for _('Add data request'), controller='ckanext.datarequests.controllers.ui_controller:DataRequestsUI', action='new', class_='btn btn-primary', icon=h.get_plus_icon() %}
+      {% link_for _('Add data request'), named_route='datarequest.new', class_='btn btn-primary', icon=h.get_plus_icon() %}
     </div>
   {% endif %}
   {% if not c.user %}
     <div class="page_primary_action">
-      {% link_for _('Login to create data request'), controller='user', action='login', class_='btn btn-primary', came_from=h.full_current_url() %}
+      {% link_for _('Login to create data request'), named_route='user.login', class_='btn btn-primary', came_from=h.full_current_url() %}
     </div>
   {% endif %}
   {% snippet 'snippets/custom_search_form.html', query=c.q, fields=(('organization', c.organization), ('state', c.state)), sorting=c.filters, sorting_selected=c.sort, placeholder=_('Search data requests...'), no_bottom_border=true, count=c.datarequest_count, no_title=True %}
