@@ -74,8 +74,8 @@ commands:
     usage: Install a site.
     cmd: |
       ahoy title "Installing a fresh site"
-      docker cp -L .docker/test.ini $(docker-compose ps -q ckan):/app/ckan/default/production.ini
-      ahoy cli "/app/scripts/init.sh"
+      docker cp -L .docker/test.ini $(docker-compose ps -q ckan):$CKAN_INI
+      ahoy cli "$SRC_DIR/app/scripts/init.sh"
 
   clean:
     usage: Remove containers and all build files.
@@ -97,10 +97,10 @@ commands:
   install-dev:
     usage: Install dependencies.
     cmd: |
-      docker cp -L requirements-dev.txt $(docker-compose ps -q ckan):/app/.
-      docker cp -L .flake8 $(docker-compose ps -q ckan):/app/.
-      docker cp -L test $(docker-compose ps -q ckan):/app/.
-      ahoy cli "pip install -r /app/requirements-dev.txt"
+      docker cp -L requirements-dev.txt $(docker-compose ps -q ckan):$SRC_DIR/app/.
+      docker cp -L .flake8 $(docker-compose ps -q ckan):$SRC_DIR/app/.
+      docker cp -L test $(docker-compose ps -q ckan):$SRC_DIR/app/.
+      ahoy cli "pip install -r $SRC_DIR/app/requirements-dev.txt"
     hide: true
 
   flush-redis:
@@ -110,7 +110,7 @@ commands:
   lint:
     usage: Lint code.
     cmd: |
-      ahoy cli "flake8 ${@:-/app/ckanext}" || \
+      ahoy cli "flake8 ${@:-$SRC_DIR/app/ckanext}" || \
       [ "${ALLOW_LINT_FAIL:-0}" -eq 1 ]
 
   test-unit:
@@ -122,7 +122,7 @@ commands:
   test-bdd:
     usage: Run BDD tests.
     cmd: |
-      ahoy cli "behave ${*:-/app/test/features}" || \
+      ahoy cli "behave ${*:-$SRC_DIR/app/test/features}" || \
       [ "${ALLOW_BDD_FAIL:-0}" -eq 1 ]
 
   # Utilities.
