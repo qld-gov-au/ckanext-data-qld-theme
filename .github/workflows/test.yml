@@ -18,8 +18,6 @@ jobs:
 
     name: ${{ matrix.application }} ${{ matrix.target_environment }} infrastructure build
     runs-on: ubuntu-latest
-    container:
-      image: .docker/Dockerfile.ckan
     services:
       solr:
         image: ckan/ckan-solr-dev:${{ matrix.ckan-version }}
@@ -66,5 +64,5 @@ jobs:
         run: nosetests
 
       - name: Run integration tests
+        uses: actions/bdd@v1
         timeout-minutes: 15
-        run: behave test/features
