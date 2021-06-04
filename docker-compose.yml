@@ -6,7 +6,7 @@ x-project:
 x-volumes:
   &default-volumes
   volumes:
-    - /app/ckan ### Local overrides to mount host filesystem. Automatically removed in CI and PROD.
+    - /srv/app/src/app ### Local overrides to mount host filesystem. Automatically removed in CI and PROD.
     - ./ckanext:/srv/app/src/app/ckanext:${VOLUME_FLAGS:-delegated} ### Local overrides to mount host filesystem. Automatically removed in CI and PROD.
     - ./test:/srv/app/src/app/test:${VOLUME_FLAGS:-delegated} ### Local overrides to mount host filesystem. Automatically removed in CI and PROD.
     ##- /app/filestore # Override for environment without host mounts. Automatically uncommented in CI.

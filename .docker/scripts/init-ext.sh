@@ -4,8 +4,9 @@
 #
 set -e
 
-pip install -r "$SRC_DIR/app/requirements.txt"
-pip install -r "$SRC_DIR/app/requirements-dev.txt"
+cd $SRC_DIR/app
+pip install -r "requirements.txt"
+pip install -r "requirements-dev.txt"
 python setup.py develop
 
 # Validate that the extension was installed correctly.
