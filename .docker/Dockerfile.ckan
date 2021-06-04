@@ -20,4 +20,3 @@ COPY requirements.txt requirements-dev.txt setup.cfg setup.py $SRC_DIR/app/
 # Init current extension.
 RUN $SRC_DIR/app/scripts/init-ext.sh
 
-ENTRYPOINT ["/srv/app/src/app/scripts/serve.sh"]

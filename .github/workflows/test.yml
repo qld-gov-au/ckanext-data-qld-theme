@@ -12,11 +12,25 @@ jobs:
     strategy:
       matrix:
         application: [OpenData]
+        ckan-version: ['2.8']
         target_environment: [DEV]
       fail-fast: false
 
     name: ${{ matrix.application }} ${{ matrix.target_environment }} infrastructure build
     runs-on: ubuntu-latest
+    services:
+      solr:
+        image: ckan/ckan-solr-dev:${{ matrix.ckan-version }}
+      postgres:
+        image: ckan/ckan-postgres-dev:${{ matrix.ckan-version }}
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+      redis:
+          image: redis:3
+
     timeout-minutes: 30
     env:
       VARS_TYPE: ${{ matrix.application }}
