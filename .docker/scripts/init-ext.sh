@@ -4,7 +4,7 @@
 #
 set -e
 
-. $WORKDIR/bin/activate
+. $APP_DIR/bin/activate
 
 pip install -r "$SRC_DIR/app/requirements.txt"
 pip install -r "$SRC_DIR/app/requirements-dev.txt"

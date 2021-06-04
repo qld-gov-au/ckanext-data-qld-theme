@@ -7,7 +7,7 @@ set -e
 
 CKAN_ACTION_URL=http://ckan:3000/api/action
 
-. $WORKDIR/bin/activate \
+. $APP_DIR/bin/activate \
     && cd $SRC_DIR/ckan
 
 # We know the "admin" sysadmin account exists, so we'll use her API KEY to create further data
