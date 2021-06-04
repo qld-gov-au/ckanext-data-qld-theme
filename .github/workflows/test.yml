@@ -64,5 +64,5 @@ jobs:
         run: nosetests
 
       - name: Run integration tests
-        uses: actions/bdd@v1
+        uses: ./.github/actions/bdd
         timeout-minutes: 15
