@@ -18,6 +18,8 @@ jobs:
 
     name: ${{ matrix.application }} ${{ matrix.target_environment }} infrastructure build
     runs-on: ubuntu-latest
+    container:
+      image: .docker/Dockerfile.ckan
     services:
       solr:
         image: ckan/ckan-solr-dev:${{ matrix.ckan-version }}
@@ -56,17 +58,13 @@ jobs:
       - uses: actions/checkout@v2
         timeout-minutes: 2
 
-      # Our config file is actually compatible with either version,
-      # but we have to specify a version, and using the wrong one fails.
-      # CircleCI uses the alpha version, which seems like a bad idea.
-      - name: Patch Ahoy API version
-        run: |
-          sed -i 's/ahoyapi: v2/ahoyapi: v1/' .ahoy.yml
+      - name: Lint
+        run: flake8
 
-      - name: Build containers
+      - name: Run unit tests
         timeout-minutes: 15
-        run: .circleci/build.sh
+        run: nosetests
 
       - name: Run integration tests
         timeout-minutes: 15
-        run: .circleci/test.sh
+        run: behave test/features
