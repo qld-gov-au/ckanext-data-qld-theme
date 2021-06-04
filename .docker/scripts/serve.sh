@@ -6,5 +6,4 @@ dockerize -wait tcp://solr:8983 -timeout 1m
 
 sed -i "s@SITE_URL@${SITE_URL}@g" $CKAN_INI
 
-. $APP_DIR/bin/activate \
-    && paster serve $CKAN_INI
+paster serve $CKAN_INI

@@ -7,8 +7,7 @@ set -e
 
 CKAN_ACTION_URL=http://ckan:3000/api/action
 
-. $APP_DIR/bin/activate \
-    && cd $SRC_DIR/ckan
+cd $SRC_DIR/ckan
 
 # We know the "admin" sysadmin account exists, so we'll use her API KEY to create further data
 API_KEY=$(paster --plugin=ckan user admin -c ${CKAN_INI} | tr -d '\n' | sed -r 's/^(.*)apikey=(\S*)(.*)/\2/')
@@ -27,4 +26,3 @@ package_owner_org_update=$( \
 )
 echo ${package_owner_org_update}
 
-deactivate
