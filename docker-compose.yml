@@ -25,11 +25,7 @@ x-user:
 services:
 
   ckan:
-    build:
-      context: .
-      dockerfile: .docker/Dockerfile.ckan
-      args:
-        SITE_URL: http://ckanext-data-qld-theme.docker.amazee.io
+    image: openknowledge/ckan-dev:2.8
     depends_on:
       - postgres
       - solr
@@ -47,7 +43,7 @@ services:
       AMAZEEIO_URL: ckanext-data-qld-theme.docker.amazee.io
 
   postgres:
-    image: amazeeio/postgres-ckan
+    image: ckan/ckan-postgres-dev:2.8
     ports:
       - "5432"
     networks:
@@ -58,7 +54,7 @@ services:
       <<: *default-environment
 
   postgres-datastore:
-    image: amazeeio/postgres-ckan
+    image: ckan/ckan-postgres-dev:2.8
     ports:
       - "5432"
     <<: *default-user
@@ -69,7 +65,7 @@ services:
       <<: *default-environment
 
   redis:
-    image: amazeeio/redis
+    image: redis:3
     <<: *default-user
     environment:
       <<: *default-environment
@@ -78,9 +74,7 @@ services:
       - default
 
   solr:
-    build:
-      context: .
-      dockerfile: .docker/Dockerfile.solr
+    image: ckan/ckan-solr-dev:2.8
     user: '8983'
     ports:
       - "8983"
