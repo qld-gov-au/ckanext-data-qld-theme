@@ -20,5 +20,4 @@ COPY requirements.txt requirements-dev.txt setup.cfg setup.py $SRC_DIR/app/
 # Init current extension.
 RUN $SRC_DIR/app/scripts/init-ext.sh
 
-ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.sh"]
-CMD ["$SRC_DIR/app/scripts/serve.sh"]
+ENTRYPOINT ["$SRC_DIR/app/scripts/serve.sh"]
