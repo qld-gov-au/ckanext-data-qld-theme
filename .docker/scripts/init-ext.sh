@@ -4,10 +4,10 @@
 #
 set -e
 
-. /app/ckan/default/bin/activate
+. $WORKDIR/bin/activate
 
-pip install -r "/app/requirements.txt"
-pip install -r "/app/requirements-dev.txt"
+pip install -r "$SRC_DIR/app/requirements.txt"
+pip install -r "$SRC_DIR/app/requirements-dev.txt"
 python setup.py develop
 
 # Validate that the extension was installed correctly.
