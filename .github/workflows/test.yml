@@ -37,6 +37,10 @@ jobs:
       DEPLOY_ENV: ${{ matrix.target_environment }}
 
     steps:
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '2.7'
+
       - name: Install tools
         timeout-minutes: 3
         run: |
@@ -52,6 +56,8 @@ jobs:
             ($SUDO apt-get install -y php && wget -O composer-setup.php https://getcomposer.org/installer && $SUDO php composer-setup.php)
           which pygmy > /dev/null || \
             ($SUDO apt-get install -y ruby && $SUDO gem install pygmy)
+          which flake8 > /dev/null || \
+            ($SUDO pip install flake8)
 
       - uses: actions/checkout@v2
         timeout-minutes: 2
