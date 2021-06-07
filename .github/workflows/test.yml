@@ -56,14 +56,14 @@ jobs:
           CKAN_USER_PASSWORD="${CKAN_USER_PASSWORD:-Password123!}"
           CKAN_USER_EMAIL="${CKAN_USER_EMAIL:-admin@localhost}"
           CKAN_INI="${CKAN_INI:-/srv/app/production.ini}"
-          paster db clean -c $CKAN_INI
-          paster db init -c $CKAN_INI
+          paster --plugin=ckan db clean -c $CKAN_INI
+          paster --plugin=ckan db init -c $CKAN_INI
           paster --plugin=ckan user add "${CKAN_USER_NAME}" email="${CKAN_USER_EMAIL}" password="${CKAN_USER_PASSWORD}" -c $CKAN_INI
           paster --plugin=ckan sysadmin add "${CKAN_USER_NAME}" -c $CKAN_INI
           CKAN_ACTION_URL="${CKAN_SITE_URL:-http://localhost:5000}/api/action"
           API_KEY=$(paster --plugin=ckan user admin -c ${CKAN_INI} | tr -d '\n' | sed -r 's/^(.*)apikey=(\S*)(.*)/\2/')
-          paster create-test-data hierarchy -c ${CKAN_INI}
-          paster create-test-data -c ${CKAN_INI}
+          paster --plugin=ckan create-test-data hierarchy -c ${CKAN_INI}
+          paster --plugin=ckan create-test-data -c ${CKAN_INI}
           package_owner_org_update=$( \
               curl -L -s --header "Authorization: ${API_KEY}" \
               --data "id=annakarenina&organization_id=department-of-health" \
