@@ -10,7 +10,7 @@ CKAN_USER_EMAIL="${CKAN_USER_EMAIL:-admin@localhost}"
 
 cd $SRC_DIR/ckan \
   && paster db clean -c $CKAN_INI \
-  && paster db init -c $CKAN_INI
+  && paster db init -c $CKAN_INI \
   && paster --plugin=ckan user add "${CKAN_USER_NAME}" email="${CKAN_USER_EMAIL}" password="${CKAN_USER_PASSWORD}" -c $CKAN_INI \
   && paster --plugin=ckan sysadmin add "${CKAN_USER_NAME}" -c $CKAN_INI
 
