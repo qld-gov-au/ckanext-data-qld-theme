@@ -18,6 +18,7 @@ jobs:
 
     name: ${{ matrix.application }} ${{ matrix.target_environment }} infrastructure build
     runs-on: ubuntu-latest
+    container: openknowledge/ckan-dev:2.8
     services:
       solr:
         image: ckan/ckan-solr-dev:${{ matrix.ckan-version }}
@@ -37,37 +38,44 @@ jobs:
       DEPLOY_ENV: ${{ matrix.target_environment }}
 
     steps:
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '2.7'
-
       - uses: actions/checkout@v2
         timeout-minutes: 2
 
-      - name: Install tools
-        timeout-minutes: 3
+      - name: Install requirements
         run: |
-          # if sudo doesn't exist, assume we're root and don't need it
-          SUDO=$(which sudo || true)
-          $SUDO apt-get update
-          which docker-compose > /dev/null || \
-            ($SUDO apt-get install -y docker-compose)
-          which ahoy > /dev/null || \
-            ($SUDO wget -q https://github.com/devinci-code/ahoy/releases/download/1.1.0/ahoy-`uname -s`-amd64 -O /usr/local/bin/ahoy \
-              && $SUDO chmod +x /usr/local/bin/ahoy)
-          which composer > /dev/null || \
-            ($SUDO apt-get install -y php && wget -O composer-setup.php https://getcomposer.org/installer && $SUDO php composer-setup.php)
-          which pygmy > /dev/null || \
-            ($SUDO apt-get install -y ruby && $SUDO gem install pygmy)
-          $SUDO pip install -r requirements-dev.txt
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          python setup.py develop
 
       - name: Lint
         run: flake8 ckanext
+
+      - name: Initialise database
+        run: |
+          CKAN_USER_NAME="${CKAN_USER_NAME:-admin}"
+          CKAN_USER_PASSWORD="${CKAN_USER_PASSWORD:-Password123!}"
+          CKAN_USER_EMAIL="${CKAN_USER_EMAIL:-admin@localhost}"
+          CKAN_INI="${CKAN_INI:-/srv/app/production.ini}"
+          paster db clean -c $CKAN_INI
+          paster db init -c $CKAN_INI
+          paster --plugin=ckan user add "${CKAN_USER_NAME}" email="${CKAN_USER_EMAIL}" password="${CKAN_USER_PASSWORD}" -c $CKAN_INI
+          paster --plugin=ckan sysadmin add "${CKAN_USER_NAME}" -c $CKAN_INI
+          CKAN_ACTION_URL="${CKAN_SITE_URL:-http://localhost:5000}/api/action"
+          API_KEY=$(paster --plugin=ckan user admin -c ${CKAN_INI} | tr -d '\n' | sed -r 's/^(.*)apikey=(\S*)(.*)/\2/')
+          paster create-test-data hierarchy -c ${CKAN_INI}
+          paster create-test-data -c ${CKAN_INI}
+          package_owner_org_update=$( \
+              curl -L -s --header "Authorization: ${API_KEY}" \
+              --data "id=annakarenina&organization_id=department-of-health" \
+              ${CKAN_ACTION_URL}/package_owner_org_update
+          )
 
       - name: Run unit tests
         timeout-minutes: 15
         run: nosetests
 
       - name: Run integration tests
-        uses: ./.github/actions/bdd
+        run: |
+          . .env
+          behave test/features || [ "${ALLOW_BDD_FAIL:-0}" -eq 1 ]
         timeout-minutes: 15
