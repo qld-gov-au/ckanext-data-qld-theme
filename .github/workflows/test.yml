@@ -62,6 +62,7 @@ jobs:
           CKAN_SITE_URL="${CKAN_SITE_URL:-http://localhost:5000}"
           CKAN_INI="${CKAN_INI:-/srv/app/production.ini}"
           cp .docker/test-github.ini $CKAN_INI
+          paster --plugin=ckan db init -c $CKAN_INI
           paster --plugin=ckan user add "${CKAN_USER_NAME}" email="${CKAN_USER_EMAIL}" password="${CKAN_USER_PASSWORD}" -c $CKAN_INI
           paster --plugin=ckan sysadmin add "${CKAN_USER_NAME}" -c $CKAN_INI
           CKAN_ACTION_URL="${CKAN_SITE_URL}/api/action"
