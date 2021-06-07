@@ -84,6 +84,7 @@ jobs:
           CKAN_INI="${CKAN_INI:-/srv/app/production.ini}"
           sudo -u ckan paster serve $CKAN_INI &
           sleep 10
+          ps -ef |grep ckan
           behave test/features || [ "${ALLOW_BDD_FAIL:-0}" -eq 1 ]
         timeout-minutes: 15
 
