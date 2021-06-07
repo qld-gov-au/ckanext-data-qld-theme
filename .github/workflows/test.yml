@@ -23,6 +23,9 @@ jobs:
       - name: Start containers
         run: docker-compose up
 
+      - name: Create test data
+        run: docker exec $(docker-compose ps -q ckan) /srv/app/src/app/scripts/init.sh
+
       - name: Lint
         run: docker exec $(docker-compose ps -q ckan) sh -c "flake8 ckanext"
 
