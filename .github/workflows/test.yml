@@ -58,20 +58,22 @@ jobs:
 
       - name: Initialise database
         run: |
-          CKAN_USER_NAME="${CKAN_USER_NAME:-admin}"
-          CKAN_USER_PASSWORD="${CKAN_USER_PASSWORD:-Password123!}"
-          CKAN_USER_EMAIL="${CKAN_USER_EMAIL:-admin@localhost}"
-          CKAN_SITE_URL="${CKAN_SITE_URL:-http://localhost:5000}"
           CKAN_INI="${CKAN_INI:-/srv/app/production.ini}"
           cp .docker/test-github.ini $CKAN_INI
           paster --plugin=ckan db init -c $CKAN_INI
+          sudo -u ckan paster serve $CKAN_INI &
+
+      - name: Create test data
+        run: |
+          CKAN_INI="${CKAN_INI:-/srv/app/production.ini}"
+          CKAN_USER_PASSWORD="${CKAN_USER_PASSWORD:-Password123!}"
+          CKAN_USER_NAME="${CKAN_USER_NAME:-admin}"
+          CKAN_USER_EMAIL="${CKAN_USER_EMAIL:-admin@localhost}"
           paster --plugin=ckan user add "${CKAN_USER_NAME}" email="${CKAN_USER_EMAIL}" password="${CKAN_USER_PASSWORD}" -c $CKAN_INI
           paster --plugin=ckan sysadmin add "${CKAN_USER_NAME}" -c $CKAN_INI
-          CKAN_ACTION_URL="${CKAN_SITE_URL}/api/action"
           API_KEY=$(paster --plugin=ckan user $CKAN_USER_NAME -c ${CKAN_INI} | tr -d '\n' | sed -r 's/^(.*)apikey=(\S*)(.*)/\2/')
           paster --plugin=ckan create-test-data hierarchy -c ${CKAN_INI}
           paster --plugin=ckan create-test-data -c ${CKAN_INI}
-          sudo -u ckan paster serve $CKAN_INI &
 
       - name: Run unit tests
         timeout-minutes: 15
