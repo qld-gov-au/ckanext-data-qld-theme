@@ -34,7 +34,7 @@ jobs:
       chrome:
         image: selenium/standalone-chrome:3.141.59-oxygen
         ports:
-          5000:5000
+          - 5000:5000
         options:
           --shm-size 1g
 
