@@ -76,6 +76,11 @@ jobs:
         with:
           url: http://localhost:5000
 
+      - uses: actions/upload-artifact@v2
+        with:
+          path: screenshots
+          name: Download-screenshots
+
       - name: Run unit tests
         timeout-minutes: 15
         run: nosetests
@@ -85,8 +90,3 @@ jobs:
           . .env
           behave test/features || [ "${ALLOW_BDD_FAIL:-0}" -eq 1 ]
         timeout-minutes: 15
-
-      - uses: actions/upload-artifact@v2
-        with:
-          path: screenshots
-          name: Download-screenshots
