@@ -61,7 +61,6 @@ jobs:
           CKAN_INI="${CKAN_INI:-/srv/app/production.ini}"
           cp .docker/test-github.ini $CKAN_INI
           paster --plugin=ckan db init -c $CKAN_INI
-          sudo -u ckan paster serve $CKAN_INI &
 
       - name: Create test data
         run: |
@@ -82,6 +81,9 @@ jobs:
       - name: Run integration tests
         run: |
           . .env
+          CKAN_INI="${CKAN_INI:-/srv/app/production.ini}"
+          sudo -u ckan paster serve $CKAN_INI &
+          sleep 10
           behave test/features || [ "${ALLOW_BDD_FAIL:-0}" -eq 1 ]
         timeout-minutes: 15
 
