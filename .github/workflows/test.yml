@@ -71,17 +71,6 @@ jobs:
           paster --plugin=ckan create-test-data hierarchy -c ${CKAN_INI}
           paster --plugin=ckan create-test-data -c ${CKAN_INI}
 
-      - name: screenshots-ci-action
-        uses: swinton/screenshot-website@v1.x
-        with:
-          source: http://localhost:5000
-          destination: homepage.png
-
-      - uses: actions/upload-artifact@v2
-        with:
-          path: homepage.png
-          name: Download-homepage-screenshot
-
       - name: Run unit tests
         timeout-minutes: 15
         run: nosetests
@@ -91,3 +80,9 @@ jobs:
           . .env
           behave test/features || [ "${ALLOW_BDD_FAIL:-0}" -eq 1 ]
         timeout-minutes: 15
+
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          path: screenshots
+          name: Download-screenshots
