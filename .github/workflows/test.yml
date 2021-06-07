@@ -23,7 +23,7 @@ jobs:
       - name: Start containers
         run: |
           docker-compose up -d
-          dockerize -wait tcp://ckan:3000 -timeout 1m
+          sleep 60
         timeout-minutes: 5
 
       - name: Create test data
