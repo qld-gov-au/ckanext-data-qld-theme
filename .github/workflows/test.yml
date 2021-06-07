@@ -62,7 +62,7 @@ jobs:
           $SUDO pip install -r requirements-dev.txt
 
       - name: Lint
-        run: flake8
+        run: flake8 ckanext
 
       - name: Run unit tests
         timeout-minutes: 15
