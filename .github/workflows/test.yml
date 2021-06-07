@@ -4,90 +4,32 @@
 name: Tests
 on:
   push:
-  schedule:
-    - cron: "0 0 1 * *"
 
 jobs:
   test:
     strategy:
-      matrix:
-        application: [OpenData]
-        ckan-version: ['2.8']
-        target_environment: [DEV]
       fail-fast: false
 
-    name: ${{ matrix.application }} ${{ matrix.target_environment }} infrastructure build
+    name: OpenData theme build
     runs-on: ubuntu-latest
-    container: openknowledge/ckan-dev:2.8
-    services:
-      solr:
-        image: ckan/ckan-solr-dev:${{ matrix.ckan-version }}
-      postgres:
-        image: ckan/ckan-postgres-dev:${{ matrix.ckan-version }}
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-      redis:
-          image: redis:3
+    container: integratedexperts/ci-builder
 
     timeout-minutes: 30
-    env:
-      VARS_TYPE: ${{ matrix.application }}
-      DEPLOY_ENV: ${{ matrix.target_environment }}
 
     steps:
       - uses: actions/checkout@v2
         timeout-minutes: 2
 
-      - name: Install requirements
-        run: |
-          pip install -r requirements.txt
-          pip install -r requirements-dev.txt
-          python setup.py develop
+      - name: Start containers
+        run: docker-compose up
 
       - name: Lint
-        run: flake8 ckanext
-
-      - name: Initialise database
-        run: |
-          CKAN_INI="${CKAN_INI:-/srv/app/production.ini}"
-          cp .docker/test-github.ini $CKAN_INI
-          paster --plugin=ckan db init -c $CKAN_INI
-
-      - name: Create test data
-        run: |
-          CKAN_INI="${CKAN_INI:-/srv/app/production.ini}"
-          CKAN_USER_PASSWORD="${CKAN_USER_PASSWORD:-Password123!}"
-          CKAN_USER_NAME="${CKAN_USER_NAME:-admin}"
-          CKAN_USER_EMAIL="${CKAN_USER_EMAIL:-admin@localhost}"
-          paster --plugin=ckan user add "${CKAN_USER_NAME}" email="${CKAN_USER_EMAIL}" password="${CKAN_USER_PASSWORD}" -c $CKAN_INI
-          paster --plugin=ckan sysadmin add "${CKAN_USER_NAME}" -c $CKAN_INI
-          API_KEY=$(paster --plugin=ckan user $CKAN_USER_NAME -c ${CKAN_INI} | tr -d '\n' | sed -r 's/^(.*)apikey=(\S*)(.*)/\2/')
-          paster --plugin=ckan create-test-data hierarchy -c ${CKAN_INI}
-          paster --plugin=ckan create-test-data -c ${CKAN_INI}
+        run: docker exec $(docker-compose ps -q ckan) sh -c "flake8 ckanext"
 
       - name: Run unit tests
         timeout-minutes: 15
-        run: nosetests
-
-      - name: Install Selenium driver
-        uses: nanasess/setup-chromedriver@master
-      - run: chromedriver --url-base=/wd/hub --port 4444 &
+        run: docker exec $(docker-compose ps -q ckan) nosetests
 
       - name: Run integration tests
-        run: |
-          . .env
-          CKAN_INI="${CKAN_INI:-/srv/app/production.ini}"
-          sudo -u ckan paster serve $CKAN_INI &
-          sleep 10
-          ps -ef |grep ckan
-          behave test/features || [ "${ALLOW_BDD_FAIL:-0}" -eq 1 ]
+        run: docker exec $(docker-compose ps -q ckan) sh -c "behave test/features" || [ "${ALLOW_BDD_FAIL:-0}" -eq 1 ]
         timeout-minutes: 15
-
-      - uses: actions/upload-artifact@v2
-        if: failure()
-        with:
-          path: test/screenshots
-          name: Download-screenshots

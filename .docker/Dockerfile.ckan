@@ -11,7 +11,7 @@ COPY .docker/test.ini $CKAN_INI
 
 COPY .docker/scripts $SRC_DIR/app/scripts
 
-RUN chmod +x $SRC_DIR/app/scripts/*.sh 
+RUN chmod +x $SRC_DIR/app/scripts/*.sh
 
 # Add current extension and files.
 COPY ckanext $SRC_DIR/app/ckanext
@@ -19,4 +19,5 @@ COPY requirements.txt requirements-dev.txt setup.cfg setup.py $SRC_DIR/app/
 
 # Init current extension.
 RUN $SRC_DIR/app/scripts/init-ext.sh
+RUN $SRC_DIR/app/scripts/init.sh
 
