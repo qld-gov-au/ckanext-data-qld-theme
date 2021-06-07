@@ -72,14 +72,15 @@ jobs:
           paster --plugin=ckan create-test-data -c ${CKAN_INI}
 
       - name: screenshots-ci-action
-        uses: flameddd/screenshots-ci-action@v1.1.1
+        uses: swinton/screenshot-website@v1.x
         with:
-          url: http://localhost:5000
+          source: http://localhost:5000
+          destination: homepage.png
 
       - uses: actions/upload-artifact@v2
         with:
-          path: screenshots
-          name: Download-screenshots
+          path: homepage.png
+          name: Download-homepage-screenshot
 
       - name: Run unit tests
         timeout-minutes: 15
