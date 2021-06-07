@@ -66,12 +66,6 @@ jobs:
           API_KEY=$(paster --plugin=ckan user $CKAN_USER_NAME -c ${CKAN_INI} | tr -d '\n' | sed -r 's/^(.*)apikey=(\S*)(.*)/\2/')
           paster --plugin=ckan create-test-data hierarchy -c ${CKAN_INI}
           paster --plugin=ckan create-test-data -c ${CKAN_INI}
-          package_owner_org_update=$( \
-              curl -L -s --header "Authorization: ${API_KEY}" \
-              --data "id=annakarenina&organization_id=department-of-health" \
-              ${CKAN_ACTION_URL}/package_owner_org_update
-          )
-          echo ${package_owner_org_update}
 
       - name: Run unit tests
         timeout-minutes: 15
