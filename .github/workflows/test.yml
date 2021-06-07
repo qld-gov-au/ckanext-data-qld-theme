@@ -71,6 +71,7 @@ jobs:
           API_KEY=$(paster --plugin=ckan user $CKAN_USER_NAME -c ${CKAN_INI} | tr -d '\n' | sed -r 's/^(.*)apikey=(\S*)(.*)/\2/')
           paster --plugin=ckan create-test-data hierarchy -c ${CKAN_INI}
           paster --plugin=ckan create-test-data -c ${CKAN_INI}
+          /srv/app/start_ckan_development.sh &
           ps -ef |grep ckan || echo "No ckan processes found"
 
       - name: Run unit tests
