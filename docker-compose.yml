@@ -45,9 +45,8 @@ services:
       LAGOON_LOCALDEV_URL: http://ckanext-data-qld-theme.docker.amazee.io
       AMAZEEIO_URL: ckanext-data-qld-theme.docker.amazee.io
 
-
   postgres:
-    image: ckan/ckan-postgres-dev:2.8
+    image: amazeeio/postgres-ckan
     ports:
       - "5432"
     networks:
@@ -57,7 +56,7 @@ services:
       <<: *default-environment
 
   postgres-datastore:
-    image: ckan/ckan-postgres-dev:2.8
+    image: amazeeio/postgres-ckan
     ports:
       - "5432"
     <<: *default-user
