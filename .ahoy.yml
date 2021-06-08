@@ -31,6 +31,8 @@ commands:
     usage: Build and start Docker containers.
     cmd: |
       docker-compose up -d "$@"
+      sleep 30
+      docker-compose logs
       ahoy cli "dockerize -wait tcp://ckan:3000 -timeout 1m || (docker-compose logs; exit 1)"
       if docker-compose logs | grep -q "\[Error\]"; then docker-compose logs; exit 1; fi
       if docker-compose logs | grep -q "Exception"; then docker-compose logs; exit 1; fi
