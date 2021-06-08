@@ -40,3 +40,4 @@ RUN /app/scripts/init-ext.sh
 
 ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.sh"]
 CMD ["/app/scripts/serve.sh"]
+
