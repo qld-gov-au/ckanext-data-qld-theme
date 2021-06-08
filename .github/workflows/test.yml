@@ -23,5 +23,5 @@ jobs:
         timeout-minutes: 10
 
       - name: Test
-        run: ./circleci/test.sh
+        run: .circleci/test.sh
         timeout-minutes: 15
