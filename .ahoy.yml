@@ -65,7 +65,7 @@ commands:
 
   cli:
     usage: Start a shell inside CLI container or run a command.
-    cmd: if \[ "${#}" -ne 0 \]; then docker exec $(docker-compose ps -q ckan) sh -c "$*"; else docker exec $(docker-compose ps -q ckan) sh -c "sh"; fi
+    cmd: if \[ "${#}" -ne 0 \]; then docker exec $(docker-compose ps -q ckan) sh -c ". ${APP_DIR}/bin/activate; $*"; else docker exec $(docker-compose ps -q ckan) sh -c ". ${APP_DIR}/bin/activate && sh"; fi
 
   doctor:
     usage: Find problems with current project setup.
@@ -77,7 +77,7 @@ commands:
     cmd: |
       ahoy title "Installing a fresh site"
       docker cp -L .docker/test.ini $(docker-compose ps -q ckan):$CKAN_INI
-      ahoy cli "$SRC_DIR/app/scripts/init.sh"
+      ahoy cli "$WORKDIR/scripts/init.sh"
 
   clean:
     usage: Remove containers and all build files.
@@ -99,10 +99,10 @@ commands:
   install-dev:
     usage: Install dependencies.
     cmd: |
-      docker cp -L requirements-dev.txt $(docker-compose ps -q ckan):$SRC_DIR/app/.
-      docker cp -L .flake8 $(docker-compose ps -q ckan):$SRC_DIR/app/.
-      docker cp -L test $(docker-compose ps -q ckan):$SRC_DIR/app/.
-      ahoy cli "pip install -r $SRC_DIR/app/requirements-dev.txt"
+      docker cp -L requirements-dev.txt $(docker-compose ps -q ckan):$WORKDIR/.
+      docker cp -L .flake8 $(docker-compose ps -q ckan):$WORKDIR/.
+      docker cp -L test $(docker-compose ps -q ckan):$WORKDIR/.
+      ahoy cli "pip install -r $WORKDIR/requirements-dev.txt"
     hide: true
 
   flush-redis:
@@ -112,7 +112,7 @@ commands:
   lint:
     usage: Lint code.
     cmd: |
-      ahoy cli "flake8 ${@:-$SRC_DIR/app/ckanext}" || \
+      ahoy cli "flake8 ${@:-$WORKDIR/ckanext}" || \
       [ "${ALLOW_LINT_FAIL:-0}" -eq 1 ]
 
   test-unit:
@@ -124,7 +124,7 @@ commands:
   test-bdd:
     usage: Run BDD tests.
     cmd: |
-      ahoy cli "behave ${*:-$SRC_DIR/app/test/features}" || \
+      ahoy cli "behave ${*:-$WORKDIR/test/features}" || \
       [ "${ALLOW_BDD_FAIL:-0}" -eq 1 ]
 
   # Utilities.

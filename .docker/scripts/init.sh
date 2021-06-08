@@ -15,4 +15,4 @@ $PASTER db clean -c $CKAN_INI \
   && $PASTER sysadmin add "${CKAN_USER_NAME}" -c $CKAN_INI
 
 # Create some base test data
-. $SRC_DIR/app/scripts/create-test-data.sh
+. $WORKDIR/scripts/create-test-data.sh
