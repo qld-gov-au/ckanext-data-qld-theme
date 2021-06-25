@@ -51,6 +51,8 @@ Disallow: /tr/
 Disallow: /uk_UA/
 Disallow: /zh_CN/
 Disallow: /zh_TW/
+# presigned S3 URLs that are only temporary
+Disallow: /ckan-*-attachments-*/
 Crawl-Delay: 10
 {% endraw %}
 {% else %}
@@ -71,4 +73,5 @@ Allow: /api/
 
 {% endraw %}
 {% endif %}
+
 {% endblock %}
