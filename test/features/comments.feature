@@ -97,7 +97,7 @@ Feature: Comments
 
     @comment-delete
     Scenario: When an Org Admin visits a data request belonging to their organisation, they can delete a comment and should not see text 'This comment was deleted.'
-        Given "Admin" as the persona
+        Given "SysAdmin" as the persona
         When I log in
         And I go to data request "Test Request" comments
         And I press the element with xpath "//a[@title='Delete comment']"
@@ -142,7 +142,7 @@ Feature: Comments
 
     @comment-delete
     Scenario: When an Org Admin visits a data request belonging to their organisation, they can delete a comment and the comment will be marked with delete by username.
-        Given "Admin" as the persona
+        Given "SysAdmin" as the persona
         When I log in
         And I go to data request "Test Request" comments
         And I press the element with xpath "//a[@title='Delete comment']"
