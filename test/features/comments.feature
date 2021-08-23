@@ -26,7 +26,7 @@ Feature: Comments
         Then I should see "This is a test comment" within 10 seconds
 
     @comment-profane
-    Scenario: When a logged-in user submits a comment containing profanity on a Data Request they should receive an error message and the commment will not appear
+    Scenario: When a logged-in user submits a comment containing profanity on a Data Request they should receive an error message and the comment will not appear
         Given "CKANUser" as the persona
         When I log in
         And I go to data request "Test Request" comments
@@ -85,7 +85,7 @@ Feature: Comments
         Then I should see "This is a reply" within 10 seconds
 
     @comment-delete
-    Scenario: When an Org Admin visits a dataset belonging to their organisation, they can delete a comment and should not see text "This comment was deleted." 
+    Scenario: When an Org Admin visits a dataset belonging to their organisation, they can delete a comment and should not see text 'This comment was deleted.'
         Given "TestOrgAdmin" as the persona
         When I log in
         Then I go to dataset "warandpeace" comments
@@ -96,7 +96,7 @@ Feature: Comments
         Then I should not see "This comment was deleted." within 2 seconds
 
     @comment-delete
-    Scenario: When an Org Admin visits a data request belonging to their organisation, they can delete a comment and should not see text "This comment was deleted." 
+    Scenario: When an Org Admin visits a data request belonging to their organisation, they can delete a comment and should not see text 'This comment was deleted.'
         Given "Admin" as the persona
         When I log in
         And I go to data request "Test Request" comments
@@ -164,7 +164,7 @@ Feature: Comments
         When I go to dataset "warandpeace"
         Then I take a screenshot
         Then I should not see an element with id "comment_form"
-    
+
     @comment-tab
     Scenario: Users should see comment tab on dataset
         Given "Unauthenticated" as the persona
