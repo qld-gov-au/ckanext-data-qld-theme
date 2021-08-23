@@ -9,7 +9,7 @@ Feature: Comments
         And I should not see "Add a comment"
 
     Scenario: Logged-in users see the add comment form
-        Given "CKANUser" as the persona
+        Given "TestOrgEditor" as the persona
         When I log in
         Then I go to dataset "warandpeace" comments
         Then I take a screenshot
@@ -17,7 +17,7 @@ Feature: Comments
 
     @comment-add
     Scenario: When a logged-in user submits a comment on a Dataset the comment should display within 10 seconds
-        Given "CKANUser" as the persona
+        Given "TestOrgEditor" as the persona
         When I log in
         Then I go to dataset "warandpeace" comments
         Then I should see an element with xpath "//h3[contains(string(), 'Add a comment')]"
@@ -27,7 +27,7 @@ Feature: Comments
 
     @comment-profane
     Scenario: When a logged-in user submits a comment containing profanity on a Data Request they should receive an error message and the comment will not appear
-        Given "CKANUser" as the persona
+        Given "TestOrgEditor" as the persona
         When I log in
         And I go to data request "Test Request" comments
         Then I should see an element with xpath "//h3[contains(string(), 'Add a comment')]"
@@ -37,7 +37,7 @@ Feature: Comments
 
     @comment-add @comment-profane
     Scenario: When a logged-in user submits a comment containing whitelisted profanity on a Dataset the comment should display within 10 seconds
-        Given "CKANUser" as the persona
+        Given "TestOrgEditor" as the persona
         When I log in
         Then I go to dataset "warandpeace" comments
         Then I should see an element with xpath "//h3[contains(string(), 'Add a comment')]"
@@ -47,7 +47,7 @@ Feature: Comments
 
     @comment-add
     Scenario: When a logged-in user submits a comment on a Data Request the comment should then be visible on the Comments tab of the Data Request
-        Given "CKANUser" as the persona
+        Given "TestOrgEditor" as the persona
         When I log in
         And I go to data request "Test Request" comments
         Then I should see an element with xpath "//h3[contains(string(), 'Add a comment')]"
@@ -57,7 +57,7 @@ Feature: Comments
 
     @comment-report
     Scenario: When a logged-in user reports a comment on a Data Request the comment should be marked as reported and an email notification sent to the organisation admins
-        Given "CKANUser" as the persona
+        Given "TestOrgEditor" as the persona
         When I log in
         And I go to data request "Test Request" comments
         And I press the element with xpath "//a[contains(string(), 'Report')]"
@@ -67,7 +67,7 @@ Feature: Comments
 
     @comment-report
     Scenario: When a logged-in user reports a comment on a Dataset the comment should be marked as reported and an email sent to the admins of the organisation
-        Given "CKANUser" as the persona
+        Given "TestOrgEditor" as the persona
         When I log in
         Then I go to dataset "warandpeace" comments
         And I press the element with xpath "//a[contains(string(), 'Report')]"
@@ -77,7 +77,7 @@ Feature: Comments
 
     @comment-reply
     Scenario: When a logged-in user submits a reply comment on a Dataset, the comment should display within 10 seconds
-        Given "CKANUser" as the persona
+        Given "TestOrgEditor" as the persona
         When I log in
         Then I go to dataset "warandpeace" comments
         Then I submit a reply with comment "This is a reply"
@@ -108,7 +108,7 @@ Feature: Comments
 
     @comment-add
     Scenario: When a logged-in user submits a comment on a Dataset the page should be scrolled to the highlighted comment they just posted.
-        Given "CKANUser" as the persona
+        Given "TestOrgEditor" as the persona
         When I log in
         Then I go to dataset "warandpeace" comments
         Then I should see an element with xpath "//h3[contains(string(), 'Add a comment')]"
@@ -119,7 +119,7 @@ Feature: Comments
 
     @comment-add @comment-email
     Scenario: When a logged-in user submits a comment on a Data Request the email should contain title and comment
-        Given "CKANUser" as the persona
+        Given "TestOrgEditor" as the persona
         When I log in
         And I go to data request "Test Request" comments
         Then I should see an element with xpath "//h3[contains(string(), 'Add a comment')]"
@@ -160,7 +160,7 @@ Feature: Comments
 
     @comment-tab
     Scenario: Logged in users should not see comment form in dataset tab
-        Given "CKANUser" as the persona
+        Given "TestOrgEditor" as the persona
         When I go to dataset "warandpeace"
         Then I take a screenshot
         Then I should not see an element with id "comment_form"
