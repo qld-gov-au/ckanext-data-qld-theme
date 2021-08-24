@@ -141,7 +141,7 @@ Feature: Comments
         Then I should see "Comment deleted by test_org_admin." within 2 seconds
 
     @comment-delete
-    Scenario: When an Org Admin visits a data request belonging to their organisation, they can delete a comment and the comment will be marked with delete by username.
+    Scenario: When a sysadmin visits a data request, they can delete a comment and the comment will be marked with delete by username.
         Given "SysAdmin" as the persona
         When I log in
         And I go to data request "Test Request" comments
