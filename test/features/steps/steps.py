@@ -45,6 +45,20 @@ def log_in_directly(context):
     """)
 
 
+@step('I log in and go to datarequest page')
+def log_in_go_to_datarequest_page(context):
+    assert context.persona
+    context.execute_steps(u"""
+        When I log in
+        And I go to datarequest page
+    """)
+
+
+@step('I go to datarequest page')
+def go_to_datarequest_page(context):
+    when_i_visit_url(context, '/datarequest')
+
+
 @step('I fill in title with random text')
 def title_random_text(context):
 
@@ -64,36 +78,11 @@ def go_to_register_page(context):
     when_i_visit_url(context, '/user/register')
 
 
-@step('I log in and go to the data requests page')
-def log_in_go_to_datarequest_page(context):
-    assert context.persona
-    context.execute_steps(u"""
-        When I log in
-        And I go to the data requests page
-    """)
-
-
-@step('I go to the data requests page')
-def go_to_datarequest_page(context):
-    when_i_visit_url(context, '/datarequest')
-
-
 @step('I log in and create a datarequest')
 def log_in_create_a_datarequest(context):
-
     assert context.persona
     context.execute_steps(u"""
-        When I log in and go to the data requests page
-        And I create a datarequest
-    """)
-
-
-@step('I create a datarequest')
-def create_datarequest(context):
-
-    assert context.persona
-    context.execute_steps(u"""
-        When I go to the data requests page
+        When I log in and go to datarequest page
         And I click the link with text that contains "Add data request"
         And I fill in title with random text
         And I fill in "description" with "Test description"
