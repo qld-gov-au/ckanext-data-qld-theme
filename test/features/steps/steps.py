@@ -2,7 +2,6 @@ from behave import step
 from behaving.personas.steps import *  # noqa: F401, F403
 from behaving.web.steps import *  # noqa: F401, F403
 from behaving.web.steps.url import when_i_visit_url
-from behaving.mail.steps import *
 import email
 import quopri
 import random
@@ -61,7 +60,6 @@ def go_to_datarequest_page(context):
 
 @step('I fill in title with random text')
 def title_random_text(context):
-
     assert context.persona
     context.execute_steps(u"""
         When I fill in "title" with "Test Title {0}"
@@ -145,12 +143,16 @@ def submit_comment_with_subject_and_comment(context, subject, comment):
     :param comment:
     :return:
     """
-    context.browser.execute_script(
-        "document.querySelector('form#comment_form input[name=\"subject\"]').value = '%s';" % subject)
-    context.browser.execute_script(
-        "document.querySelector('form#comment_form textarea[name=\"comment\"]').value = '%s';" % comment)
-    context.browser.execute_script(
-        "document.querySelector('form#comment_form .form-actions input[type=\"submit\"]').click();")
+    context.browser.execute_script("""
+        subject_field = document.querySelector('form input[name="subject"]');
+        if (subject_field) { subject_field.value = '%s'; }
+        """ % subject)
+    context.browser.execute_script("""
+        document.querySelector('form textarea[name="comment"]').value = '%s';
+        """ % comment)
+    context.browser.execute_script("""
+        document.querySelector('form .btn-primary[type="submit"]').click();
+        """)
 
 
 @step(u'I submit a reply with comment "{comment}"')
@@ -162,10 +164,12 @@ def submit_reply_with_comment(context, comment):
     :param comment:
     :return:
     """
-    context.browser.execute_script(
-        "document.querySelector('.comment-wrapper form textarea[name=\"comment\"]').value = '%s';" % comment)
-    context.browser.execute_script(
-        "document.querySelector('.comment-wrapper form .form-actions input[type=\"submit\"]').click();")
+    context.browser.execute_script("""
+        document.querySelector('.comment-wrapper form textarea[name="comment"]').value = '%s';
+        """ % comment)
+    context.browser.execute_script("""
+        document.querySelector('.comment-wrapper form .btn-primary[type="submit"]').click();
+        """)
 
 
 @step('I create a dataset with license {license} and resource file {file}')
