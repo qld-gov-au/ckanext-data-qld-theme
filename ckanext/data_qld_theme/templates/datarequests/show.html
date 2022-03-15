@@ -18,15 +18,15 @@
   {% endif %}
 
   {% if h.check_access('open_datarequest', {'id':datarequest_id }) and c.datarequest.closed %}
-    {% link_for _('Re-open'), named_route='open_datarequest', id=datarequest_id, class_='btn btn-success', icon='unlock' %}
+      {% link_for _('Re-open'), controller='ckanext.data_qld.controller:DataQldUI', action='open_datarequest', id=datarequest_id, class_='btn btn-success', icon='unlock' %}
   {% endif %}
 
 {% endblock %}
 
 {% block content_primary_nav %}
-  {{ h.build_nav_icon('datarequest.show', _('Data request'), id=datarequest_id) }}
+  {{ h.build_nav_icon('show_datarequest', _('Data request'), id=datarequest_id) }}
 
   {% if h.show_comments_tab() and h.ytp_comments_enabled() %}
-    {{ h.build_nav_icon('datarequest.comment', _('Comments') + ' ' + h.get_content_type_comments_badge(datarequest_id, 'datarequest'), id=datarequest_id) }}
+    {{ h.build_nav_icon('comment_datarequest', _('Comments') + ' ' + h.get_content_type_comments_badge(datarequest_id, 'datarequest'), id=datarequest_id) }}
   {% endif %}
 {% endblock %}
